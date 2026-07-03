@@ -1,0 +1,69 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img_bgr = cv2.imread('E:\python\Image_folder\\flower.jpeg')
+if img_bgr is None:
+    print("Error: image not find")
+    exit()
+
+img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+h, w = img_rgb.shape[:2]
+
+def rotate_without_crop(image, angle):
+
+    (h, w) = image.shape[:2]
+    center = (w // 2, h // 2)
+   
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+
+    cos = np.abs(M[0, 0])
+    sin = np.abs(M[0, 1])
+    new_w = int((h * sin) + (w * cos))
+    new_h = int((h * cos) + (w * sin))
+
+    M[0, 2] += (new_w / 2) - center[0]
+    M[1, 2] += (new_h / 2) - center[1]
+
+    rotated = cv2.warpAffine(image, M, (new_w, new_h), borderValue=(255,255,255))
+    return rotated
+
+
+angle_0 = img_rgb # Original
+angle_45 = rotate_without_crop(img_rgb, 45) # 45 degree
+angle_90 = rotate_without_crop(img_rgb, 90) # 90 degree
+angle_180 = rotate_without_crop(img_rgb, 180) # 180 degree - Ulta
+angle_270 = rotate_without_crop(img_rgb, -90) # 270 ya -90 degree
+
+plt.figure(figsize=(15,10))
+
+plt.subplot(2,3,1)
+plt.imshow(angle_0)
+plt.title(f'0° Original\n{w}x{h}')
+plt.axis('off')
+
+plt.subplot(2,3,2)
+plt.imshow(angle_45)
+plt.title(f'45° Rotated\n{angle_45.shape[1]}x{angle_45.shape[0]}')
+plt.axis('off')
+
+plt.subplot(2,3,3)
+plt.imshow(angle_90)
+plt.title(f'90° Rotated\n{angle_90.shape[1]}x{angle_90.shape[0]}')
+plt.axis('off')
+
+plt.subplot(2,3,4)
+plt.imshow(angle_180)
+plt.title(f'180° Ulta\n{angle_180.shape[1]}x{angle_180.shape[0]}')
+plt.axis('off')
+
+plt.subplot(2,3,5)
+plt.imshow(angle_270)
+plt.title(f'270° Rotated\n{angle_270.shape[1]}x{angle_270.shape[0]}')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
+cv2.imwrite('rotate_45.jpg', cv2.cvtColor(angle_45, cv2.COLOR_RGB2BGR))
+cv2.imwrite('rotate_90.jpg', cv2.cvtColor(angle_90, cv2.COLOR_RGB2BGR))

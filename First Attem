@@ -1,0 +1,33 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# Read an image
+
+img = cv2.imread("E:\python\Image_folder\\tiger.jpeg")
+img2 = cv2.imread("E:\python\Image_folder\dog.jpeg")
+
+print(type(img))
+print(img.shape)
+print(img.size)
+
+cv2.imshow("window1",img)
+
+img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+cv2.imshow("window2",img_gray)
+print(img_gray.shape)
+print(img_gray.size)
+key=cv2.waitKey(0)
+if key==ord('s'):
+    cv2.imwrite('E:\All_Python_file\Image_folder\\tiger2.jpeg',img_gray)
+cv2.destroyWindow()
+
+#  using Matplotlib
+
+# img = cv2.imread("E:\All_Python_file\Image_folder\\tiger.jpeg",0)
+# # img2 = cv2.imread("E:\All_Python_file\Image_folder\\tiger.jpeg")
+# plt.imshow(img)
+# plt.show()
+# # plt.imshow(img2)
+# # plt.show()

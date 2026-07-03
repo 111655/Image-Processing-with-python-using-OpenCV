@@ -1,0 +1,42 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img_bgr = cv2.imread('E:\python\Image_folder\\flower.jpeg')
+if img_bgr is None:
+    print("Error: image not found")
+    exit()
+
+img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+h, w = img_rgb.shape[:2]
+
+zoom_crop = img_rgb[h//4 : 3*h//4, w//4 : 3*w//4]
+zoom_50 = cv2.resize(zoom_crop, (w, h))
+
+crop_bottom_50 = img_rgb[h//2 : h, 0 : w]
+
+plt.figure(figsize=(15,5))
+
+plt.subplot(1,3,1)
+plt.imshow(img_rgb)
+plt.title(f'1. Original\n{w}x{h}')
+plt.axis('off')
+
+plt.subplot(1,3,2)
+plt.imshow(zoom_50)
+plt.title('2. 50% Zoom to Center ')
+plt.axis('off')
+
+plt.subplot(1,3,3)
+plt.imshow(crop_bottom_50)
+plt.title(f'3. 50% Bottom Crop\n{w}x{h//2}')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
+
+cv2.imwrite('1_original.jpg', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+cv2.imwrite('2_zoom_50.jpg', cv2.cvtColor(zoom_50, cv2.COLOR_RGB2BGR))
+cv2.imwrite('3_crop_bottom_50.jpg', cv2.cvtColor(crop_bottom_50, cv2.COLOR_RGB2BGR))
+

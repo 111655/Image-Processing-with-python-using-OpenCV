@@ -1,0 +1,66 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img_bgr = cv2.imread('E:\python\Image_folder\\flower.jpeg')
+if img_bgr is None:
+    print("Error: image not find")
+    exit()
+
+img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+
+r, g, b = cv2.split(img_rgb)
+
+plt.figure(figsize=(15,6))
+
+plt.subplot(2,4,1)
+plt.imshow(img_rgb)
+plt.title('Original Image')
+plt.axis('off')
+
+plt.subplot(2,4,2)
+plt.imshow(r, cmap='Reds')
+plt.title('Red Channel')
+plt.axis('off')
+
+plt.subplot(2,4,3)
+plt.imshow(g, cmap='Greens')
+plt.title('Green Channel')
+plt.axis('off')
+
+plt.subplot(2,4,4)
+plt.imshow(b, cmap='Blues')
+plt.title('Blue Channel')
+plt.axis('off')
+
+plt.subplot(2,1,2)
+plt.title('RGB Color Distribution', fontsize=14, fontweight='bold')
+
+
+plt.hist(r.ravel(), bins=256, range=[0,256], color='red', alpha=0.6, label='Red')
+plt.hist(g.ravel(), bins=256, range=[0,256], color='green', alpha=0.6, label='Green')
+plt.hist(b.ravel(), bins=256, range=[0,256], color='blue', alpha=0.6, label='Blue')
+
+plt.xlabel('Pixel Value → 0=Black, 255=Full Color', fontsize=12)
+plt.ylabel('Pixel value', fontsize=12)
+plt.legend()
+plt.grid(alpha=0.3)
+plt.xlim([0,256])
+
+plt.tight_layout()
+plt.show()
+
+print("=== IMAGE KA DATA ===")
+print(f"Image Size: {img_rgb.shape[1]} x {img_rgb.shape[0]} pixels")
+print(f"Total Pixels: {img_rgb.shape[0] * img_rgb.shape[1]}")
+print(f"\nRed - Average: {np.mean(r):.1f}, Max: {np.max(r)}, Min: {np.min(r)}")
+print(f"Green - Average: {np.mean(g):.1f}, Max: {np.max(g)}, Min: {np.min(g)}")
+print(f"Blue - Average: {np.mean(b):.1f}, Max: {np.max(b)}, Min: {np.min(b)}")
+
+# Dominant color nikal
+if np.mean(r) > np.mean(g) and np.mean(r) > np.mean(b):
+    print("\nDominant Color: RED 🔴")
+elif np.mean(g) > np.mean(r) and np.mean(g) > np.mean(b):
+    print("\nDominant Color: GREEN 🟢")
+else:
+    print("\nDominant Color: BLUE 🔵")

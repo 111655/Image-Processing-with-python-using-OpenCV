@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img = cv2.imread('E:\python\Image_folder\\flower.jpeg')
+
+
+if img is None:
+    print("Error: image not find")
+    exit()
+
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+l, a, b = cv2.split(lab)
+clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+l = clahe.apply(l)
+enhanced = cv2.merge((l,a,b))
+enhanced_rgb = cv2.cvtColor(enhanced, cv2.COLOR_LAB2RGB)
+
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+lower_bg = np.array([0,0,100])   # light color range
+upper_bg = np.array([179,60,255])
+mask = cv2.inRange(hsv, lower_bg, upper_bg)
+img_white_bg = img_rgb.copy()
+img_white_bg[mask > 0] = [255,255,255]  # Background white
+
+cv2.imwrite('flower_enhanced.jpg', cv2.cvtColor(enhanced_rgb, cv2.COLOR_RGB2BGR))
+cv2.imwrite('flower_white_bg.jpg', cv2.cvtColor(img_white_bg, cv2.COLOR_RGB2BGR))
+
+plt.figure(figsize=(12,4))
+plt.subplot(1,3,1); plt.imshow(img_rgb); plt.title('Original'); plt.axis('off')
+plt.subplot(1,3,2); plt.imshow(enhanced_rgb); plt.title('Contrast Enhanced'); plt.axis('off')
+plt.subplot(1,3,3); plt.imshow(img_white_bg); plt.title('White Background'); plt.axis('off')
+plt.tight_layout()
+plt.show()
